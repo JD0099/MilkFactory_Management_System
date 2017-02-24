@@ -1,0 +1,92 @@
+drop table deliver;
+drop table customer;
+drop table milk_storage;
+
+create table milk_storage(
+    milk_id varchar2(10) not null,
+    milk_type varchar2(15) not null,
+    make_date date not null,
+    sell_date date not null,
+    price number(10) not null,
+    amount number(10) not null,
+    
+    constraint milk_storage_milk_id_pk primary key(milk_id)
+);
+
+create table customer(
+    cus_id varchar2(10) not null,
+    cus_name varchar2(10) not null,
+    cus_date date not null,
+    cus_end_date date not null,
+    ceo_name varchar2(10) not null,
+    loc varchar2(10) not null,
+    
+    constraint customer_cus_id_pk primary key(cus_id)
+);
+
+create table deliver(
+    deliver_id varchar2(10) not null,
+    milk_id varchar2(10) not null,
+    cus_id  varchar2(10) not null,
+    deliver_date date not null,
+    deliver_amount number(10) not null,
+    
+    constraint deliver_deliver_id_pk primary key(deliver_id),
+    constraint deliver_milk_id_fk foreign key(milk_id) references milk_storage(milk_id),
+    constraint deliver_cus_id_fk foreign key(cus_id) references customer(cus_id)
+);
+
+insert into milk_storage values('W0515','WHITE','2015-05-15','2015-05-22',1000,110);
+insert into milk_storage values('C0619','CHOCO','2015-06-19','2015-06-26',1200,220);
+insert into milk_storage values('S0702','STRAW','2015-07-02','2015-07-09',1200,200);
+insert into milk_storage values('W1015','WHITE','2015-10-15','2015-10-22',1000,110);
+insert into milk_storage values('C1119','CHOCO','2015-11-19','2015-11-26',1200,220);
+insert into milk_storage values('S0902','STRAW','2015-09-02','2015-09-09',1200,200);
+insert into milk_storage values('W1010','WHITE','2016-10-10','2016-10-17',1000,110);
+insert into milk_storage values('C1010','CHOCO','2016-10-10','2016-10-17',1200,220);
+insert into milk_storage values('S0910','STRAW','2016-09-10','2016-09-17',1200,200);
+insert into milk_storage values('W0811','WHITE','2016-08-11','2016-08-18',1000,180);
+insert into milk_storage values('C0711','CHOCO','2016-07-11','2016-07-18',1200,200);
+insert into milk_storage values('S0611','STRAW','2016-06-11','2016-06-18',1200,320);
+insert into milk_storage values('W0512','WHITE','2016-05-12','2016-05-19',1000,100);
+insert into milk_storage values('C0412','CHOCO','2016-04-12','2016-04-19',1200,240);
+insert into milk_storage values('S0312','STRAW','2016-03-12','2016-03-19',1200,290);
+insert into milk_storage values('W0213','WHITE','2016-02-13','2016-02-20',1000,150);
+insert into milk_storage values('C0120','CHOCO','2016-01-20','2016-01-27',1200,240);
+insert into milk_storage values('S0629','STRAW','2016-06-22','2016-06-29',1200,290);
+insert into milk_storage values('W0504','WHITE','2016-05-04','2016-05-11',1000,150);
+insert into milk_storage values('W1208','WHITE','2016-12-07','2016-12-14',1000,150);
+
+insert into customer values('S001','서울지점1','2016-11-22','2018-11-22','김성래','서울');
+insert into customer values('B001','부산지점1','2016-10-22','2018-12-22','권동영','부산');
+insert into customer values('D001','대구지점1','2016-07-21','2018-11-28','박지동','대구');
+insert into customer values('U001','울산지점1','2016-05-11','2018-12-21','신예진','울산');
+insert into customer values('S002','서울지점2','2015-11-22','2018-01-22','홍길동','서울');
+insert into customer values('M001','마산지점2','2014-10-22','2018-03-22','박철수','마산');
+insert into customer values('E001','익산지점1','2016-01-05','2017-11-24','김영희','익산');
+insert into customer values('B002','부산지점2','2013-12-01','2016-12-22','김태영','부산');
+insert into customer values('S003','서울지점3','2013-11-05','2018-11-10','홍명보','서울');
+insert into customer values('B003','부산지점3','2016-10-21','2016-12-29','손흥민','부산');
+
+insert into deliver values('1','W0515','S001','2015-05-16',40);
+insert into deliver values('2','C0619','S001','2015-06-20',50);
+insert into deliver values('3','S0702','B001','2015-07-03',35);
+insert into deliver values('4','W1015','D001','2015-10-16',70);
+insert into deliver values('5','C1119','S001','2015-11-20',43);
+insert into deliver values('6','S0902','D001','2015-09-03',77);
+insert into deliver values('7','W1010','S002','2016-10-11',88);
+insert into deliver values('8','S0910','M001','2016-09-11',46);
+insert into deliver values('9','W0811','E001','2016-08-12',23);
+insert into deliver values('10','S0611','D001','2016-06-12',50);
+insert into deliver values('11','C0412','B002','2016-04-13',30);
+insert into deliver values('12','C0619','B003','2016-12-08',50);
+
+drop sequence seq_del_id;
+
+--시퀀스
+create sequence seq_del_id
+start with 13;
+
+
+
+commit;
