@@ -1,0 +1,2980 @@
+// win32 Visual C 2010 이상컴파일시 추가
+// 프로그램 가장 첫 줄에 추가할 것
+#define _CRT_SECURE_NO_WARNINGS
+//-----------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <conio.h>
+
+/* for oracle */
+#include <sqlda.h>
+#include <sqlca.h>
+#include <sqlcpr.h>
+
+
+// win32 Visual C 2010 이상컴파일시 추가
+#define PAGE_NUM 5
+#define getch() _getch()
+//-----------------------------------------
+
+/*---------------  화면 커서 위치 제어 ----------------------*/
+#include < windows.h >
+void gotoxy(int x, int y) ;
+void getxy(int *x, int *y) ;
+void clrscr(void) ;
+/*-----------------------------------------------------------*/
+void print_screen(char fname[]);
+void DB_connect();
+void Milk_get_tuple();
+void Milk_insert_tuple();
+void Milk_select_tuple();
+void Milk_update_tuple();
+void Milk_delete_tuple();
+
+void Del_get_tuple();
+void Del_insert_tuple();
+void Del_select_tuple();
+void Del_update_tuple();
+void Del_delete_tuple();
+
+void Cus_insert_tuple();
+void Cus_get_tuple();
+void Cus_update_Select_tuple();
+void Cus_update_tuple();
+void Cus_delete_tuple();
+
+void Day_sales_get_tuple();
+void Month_sales_get_tuple();
+
+void sql_error();
+
+EXEC SQL BEGIN DECLARE SECTION;
+	VARCHAR uid[80];
+	VARCHAR pwd[20];
+EXEC SQL END DECLARE SECTION;
+
+#define getch() _getch()
+
+char Milkid[10], Milktype[10], Makedate[15], Selldate[15],Price[10],Amount[10],check[10];
+char CusId[100], CusName[100], CusDate[100], CusEndDate[100], Ceo[100], Loc[100] ;
+char del_id[10],temp_id[10],milk_id[10],cus_id[10],del_date[20],del_num[10],temp_num[10];
+int chk = 0, chk2 = 0, milk_ch = 0, main_ch = 0, sales_ch=0, del_ch = 0;
+int cus_ch = 0;
+int chk3 = 0;
+int chk4 = 0;
+int chk5 = 0;
+int chk6 = 0;
+int chk7 = 0;
+int chk8 = 0;
+int chk9 = 0;
+
+
+void main()
+{
+	DB_connect();
+	while(1){
+		main_ch = 0;
+		gotoxy(0,0);
+		for (int i = 0; i < 25; i++){
+		printf("                                                                                         \n");
+		}
+		gotoxy(0,0);
+		print_screen("menu_view.txt");
+		gotoxy(40,9);
+		scanf("%d",&main_ch);
+		fflush(stdin);
+
+	if(main_ch == 1){
+	while(1){
+	milk_ch = 0;
+	gotoxy(0,0);
+	//clrscr();
+	for (int i = 0; i < 25; i++){
+		printf("                                                                                         \n");
+	}
+	gotoxy(0,0);
+   	print_screen("menu2_view.txt");
+	
+	gotoxy(40,9);
+	scanf("%d",&milk_ch);
+	fflush(stdin);
+	
+	if(milk_ch == 1){
+		gotoxy(0,0);
+		Milk_get_tuple();
+		getch();
+		gotoxy(0,0);
+           for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		gotoxy(0,0);
+	}
+	else if(milk_ch == 2){
+		gotoxy(0,0);
+		Milk_insert_tuple();
+		getch();
+		gotoxy(0,0);
+ 	   for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		gotoxy(0,0);
+	}
+	else if(milk_ch == 3){
+		gotoxy(0,0);
+		Milk_select_tuple();
+		getch();
+		
+		for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		if(chk == 0){
+			gotoxy(0,0);
+			continue;
+		}
+		gotoxy(0,0);
+		Milk_update_tuple();
+		getch();
+		gotoxy(0,0);
+ 	   for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		gotoxy(0,0);
+		chk = 0;
+	}
+	else if(milk_ch == 4){
+		gotoxy(0,0);
+		Milk_delete_tuple();
+		getch();
+		gotoxy(0,0);
+ 	   for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		gotoxy(0,0);
+		chk2 = 0;
+	}
+	else if(milk_ch == 5){
+		gotoxy(28,10);
+		printf("                          ");
+		gotoxy(28,11);
+		printf("                          ");
+		gotoxy(28,10);
+		break;
+	}else{
+		gotoxy(0,10);
+		printf("                                                                   ");
+		gotoxy(0,11);
+		printf("                                                                   ");
+		gotoxy(28,10);
+		printf("잘못 입력하셨습니다.");
+		gotoxy(28,11);
+		printf("다시 입력하세요.");
+		continue;
+		}
+	}
+	}
+	else if (main_ch == 2){
+	while(1){
+	cus_ch = 0;
+	gotoxy(0,0);
+	clrscr();
+   	print_screen("menu3_view.txt");
+	
+	gotoxy(47,9);
+	scanf("%d",&cus_ch);
+	fflush(stdin);
+	gotoxy(28,11);  
+	printf("                                                                                           ");
+	gotoxy(28,12);
+	printf("                                                                                                 ");
+	for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+	if(cus_ch == 1){
+		gotoxy(0,0);
+		Cus_get_tuple();
+		getch();
+		gotoxy(0,0);
+           for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		gotoxy(0,0);
+	}
+	else if(cus_ch == 2){
+		gotoxy(0,0);
+		Cus_insert_tuple();
+		getch();
+		gotoxy(0,0);
+ 	   for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		gotoxy(0,0);
+	}
+	else if(cus_ch == 3){
+		
+		gotoxy(0,0);
+		Cus_update_Select_tuple();
+		getch();
+		gotoxy(0,0);
+	        for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   	}
+			gotoxy(0,0);
+			Cus_update_tuple();
+			getch();
+			gotoxy(0,0);
+                
+ 	        	 for(int i= 0; i < 25; i++){
+			printf("                                                                                         \n");
+	  		 }
+            	gotoxy(0,0);
+		chk=0;
+		
+	}
+	else if(cus_ch == 4){
+	
+		gotoxy(0,0);
+		Cus_delete_tuple();
+		getch();
+		gotoxy(0,0);
+ 	   for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		gotoxy(0,0);
+		chk2 = 0;
+	}
+	else if(cus_ch == 5){
+		break;
+	}else{
+		gotoxy(28,11);
+		printf("잘못 입력하셨습니다.");
+		gotoxy(28,12);
+		printf("다시 입력하세요.");
+	}
+	
+		}
+	}
+	else if (main_ch == 3){
+	while(1){
+		del_ch = 0;
+	gotoxy(0,0);
+	clrscr();
+   	print_screen("menu4_view.txt");
+	
+	gotoxy(40,9);
+	scanf("%d",&del_ch);
+	fflush(stdin);
+	gotoxy(28,11);  
+	printf("                                                                                           ");
+	gotoxy(28,12);
+	printf("                                                                                                 ");
+	for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+	if(del_ch == 1){
+		gotoxy(0,0);
+		Del_get_tuple();
+		getch();
+		gotoxy(0,0);
+           for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		gotoxy(0,0);
+	}
+	else if(del_ch == 2){
+		gotoxy(0,0);
+		Del_insert_tuple();
+		getch();
+		gotoxy(0,0);
+ 	   for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		gotoxy(0,0);
+	}
+	else if(del_ch == 3){
+		gotoxy(0,0);
+		Del_select_tuple();
+		getch();
+		gotoxy(0,0);
+		for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		if(chk == 0){
+			gotoxy(0,0);
+			continue;
+		}
+		gotoxy(0,0);
+		Del_update_tuple();
+		getch();
+		gotoxy(0,0);
+ 	   for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		gotoxy(0,0);
+		chk = 0;
+	}
+	else if(del_ch == 4){
+		gotoxy(0,0);
+		Del_delete_tuple();
+		getch();
+		gotoxy(0,0);
+ 	   for(int i= 0; i < 25; i++){
+		printf("                                                                               \n");
+	   }
+		gotoxy(0,0);
+		chk2 = 0;
+	}
+	else if(del_ch == 5){
+		gotoxy(28,10);
+		printf("                          ");
+		gotoxy(28,11);
+		printf("                          ");
+		gotoxy(28,10);
+		break;
+	}else{
+		gotoxy(0,10);
+		printf("                                                                   ");
+		gotoxy(0,11);
+		printf("                                                                   ");
+		gotoxy(28,10);
+		printf("잘못 입력하셨습니다.");
+		gotoxy(28,11);
+		printf("다시 입력하세요.");
+		continue;
+		}
+		}
+	}
+	else if (main_ch == 4){
+		while(1){
+	sales_ch = 0;
+	gotoxy(0,0);
+	//clrscr();
+	for (int i = 0; i < 25; i++){
+		printf("                                                                                         \n");
+	}
+	gotoxy(0, 0);
+   	print_screen("sales_menu_view.txt");
+	
+	gotoxy(31,9);
+	scanf("%d",&sales_ch);
+	fflush(stdin);
+	
+	if(sales_ch == 1){
+		gotoxy(0,0);
+		Month_sales_get_tuple();
+		getch();
+		gotoxy(0,0);
+           for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		gotoxy(0,0);
+
+		}
+	else if (sales_ch == 2){
+		gotoxy(0,0);
+		Day_sales_get_tuple();
+		getch();
+		gotoxy(0,0);
+           for(int i= 0; i < 25; i++){
+		printf("                                                                                         \n");
+	   }
+		gotoxy(0,0);
+
+		}
+	else if (sales_ch == 3){
+		gotoxy(28,10);
+		printf("                          ");
+		gotoxy(28,11);
+		printf("                          ");
+		gotoxy(28,10);
+		break;
+		}	
+		else{
+		gotoxy(0,10);
+		printf("                                                                   ");
+		gotoxy(0,11);
+		printf("                                                                   ");
+		gotoxy(28,10);
+		printf("잘못 입력하셨습니다.");
+		gotoxy(28,11);
+		printf("다시 입력하세요.");
+		continue;
+		}
+	}
+	}else if (main_ch == 5){
+		gotoxy(28,10);
+		printf("                          ");
+		gotoxy(28,11);
+		printf("                          ");
+		gotoxy(28,10);
+		break;
+	}
+	else{
+		gotoxy(0,10);
+		printf("                                                                   ");
+		gotoxy(0,11);
+		printf("                                                                   ");
+		gotoxy(28,10);
+		printf("잘못 입력하셨습니다.");
+		gotoxy(28,11);
+		printf("다시 입력하세요.");
+		continue;
+	}
+	
+		}
+	
+}
+void DB_connect()
+{
+   strcpy((char *)uid.arr,"a20113390@//seasadal.deu.ac.kr:1521/orcl");
+   uid.len = (short) strlen((char *)uid.arr);
+   strcpy((char *)pwd.arr,"a20113390");
+   pwd.len = (short) strlen((char *)pwd.arr);
+
+   EXEC SQL CONNECT :uid IDENTIFIED BY :pwd;
+
+	// connection이 실패했을경우의 처리부분
+
+	if (sqlca.sqlcode != 0 && sqlca.sqlcode != -1405){ 
+		printf("\7Cconnect error: %s", sqlca.sqlerrm.sqlerrmc);
+		getch();
+		exit(-1);
+	}
+}
+
+void Del_insert_tuple()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    varchar    del_id[10]; //납품번호
+    varchar   milk_id[10]; //우유번호
+    varchar   milk_id2[10]; //우유번호2
+    varchar    cus_id[10]; //고객번호
+    varchar    cus_id2[10]; //고객번호2
+    varchar  del_date[20]; //납품일자
+    varchar     milk_num[10]; //우유개수
+    varchar     del_num[10]; //납품개수
+
+    char dynstmt[1000];
+    char dynstmt2[1000];
+    char dynstmt3[1000];
+    char dynstmt4[1000];
+EXEC SQL END DECLARE SECTION;
+    
+   
+
+   /* Register sql_error() as the error handler. */
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+   clrscr();
+   print_screen("insert_del_view.txt");
+
+ /* 데이터 입력 */
+ while(1){//고객번호
+	gotoxy(27,5);
+   printf("              ");
+	gotoxy(27,5);
+   gets(milk_id.arr); 
+   milk_id.len = strlen(milk_id.arr);
+   for(int j = 0; j<strlen(milk_id.arr); j++)
+	milk_id.arr[j] = (char)toupper(milk_id.arr[j]);
+	chk6 = 0;
+
+   sprintf(dynstmt,"select milk_id, amount from milk_storage where milk_id = '%s'", milk_id.arr);
+	
+   EXEC SQL PREPARE S21 FROM :dynstmt ;
+
+   	/* cursor 선언 */
+  	 EXEC SQL DECLARE c_cursor21 CURSOR FOR S21 ; 
+
+   	/* cursor open */
+   	EXEC SQL OPEN c_cursor21 ; 
+
+  	 EXEC SQL WHENEVER NOT FOUND DO break;
+
+	for(;;)
+        {
+        EXEC SQL FETCH c_cursor21 INTO :milk_id2, :milk_num;
+
+	    milk_id2.arr[milk_id2.len] = '\0';
+	    milk_num.arr[milk_num.len] = '\0';
+		chk6 = 1;
+        }
+	EXEC SQL WHENEVER NOT FOUND CONTINUE;
+   
+   if(chk6 == 1 && milk_id.arr[4] != '\0' && milk_id.arr[5] == '\0'){
+        gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }
+   else if(chk6 == 0){
+	gotoxy(27,15);
+	printf("재고에 없는 제품번호이므로\n");
+        gotoxy(27,16);
+	printf("제품번호를 다시 입력하세요.\n");
+	}
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 제품번호를 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("W1111, C1111, S1111");
+	}
+   }
+
+   while(1){
+   gotoxy(55,5);
+   printf("                ");
+   gotoxy(55,5);
+   gets(cus_id.arr); 
+   cus_id.len = strlen(cus_id.arr);
+   cus_id.arr[0] = (char)toupper(cus_id.arr[0]);
+   chk6 = 0;
+
+   sprintf(dynstmt2,"select cus_id from customer where cus_id = '%s'", cus_id.arr);
+	
+   EXEC SQL PREPARE S20 FROM :dynstmt2 ;
+
+   	/* cursor 선언 */
+  	 EXEC SQL DECLARE c_cursor20 CURSOR FOR S20 ; 
+
+   	/* cursor open */
+   	EXEC SQL OPEN c_cursor20 ; 
+
+  	 EXEC SQL WHENEVER NOT FOUND DO break;
+
+	for(;;)
+        {
+        EXEC SQL FETCH c_cursor20 INTO :cus_id2;
+
+	    cus_id2.arr[cus_id2.len] = '\0';
+		chk6 = 1;
+        }
+	EXEC SQL WHENEVER NOT FOUND CONTINUE;
+   
+   if((chk6 == 1 && cus_id.arr[3] != '\0' &&cus_id.arr[4] == '\0') ){
+	gotoxy(27,15);
+	printf("                                      \n");
+        gotoxy(27,16);
+	printf("                                      \n");
+	break;
+   
+   }
+   else if(chk6 == 0){
+	gotoxy(27,15);
+	printf("등록 되지 않은 거래처번호이므로\n");
+        gotoxy(27,16);
+	printf("거래처번호를 다시 입력하세요.\n");
+	}
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 거래처 번호를 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)영어 + 세자리 숫자");
+   }
+   }
+   
+   while(1){//납품 날짜
+   gotoxy(27,7);
+   printf("                ");
+   gotoxy(27,7);
+   gets(del_date.arr); 
+   del_date.len = strlen(del_date.arr);
+   if((del_date.arr[4] == '-' &&del_date.arr[7] == '-') && (del_date.arr[9] != '\0' && del_date.arr[10] == '\0')){
+	gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 납품할 날짜를 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)2016-11-12");
+   }
+   }
+
+   while(1){
+   gotoxy(51,7);
+   printf("                ");
+   gotoxy(51,7);
+   gets(del_num.arr); 
+   del_num.len = strlen(del_num.arr);
+   if(del_num.arr[0] == '1' || del_num.arr[0] == '2' || del_num.arr[0] == '3'|| del_num.arr[0] == '4' || del_num.arr[0] == '5' || del_num.arr[0] == '6' || del_num.arr[0] == '7' || del_num.arr[0] == '8' || del_num.arr[0] == '9'){
+        gotoxy(27,15);
+	printf("                                       \n");
+        gotoxy(27,16);
+	printf("                                       \n");
+	break;
+   }else {
+   gotoxy(27,15);
+   printf("ERROR : 납품 개수를 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)20");
+   }
+   }
+        if(atoi(milk_num.arr) >= atoi(del_num.arr)){
+    sprintf(dynstmt3,"insert into deliver values (seq_del_id.NEXTVAL,'%s','%s',to_date('%s','YYYY-MM-DD'),'%s')",milk_id.arr,cus_id.arr,del_date.arr,del_num.arr);
+
+    sprintf(dynstmt4,"update milk_storage set amount = amount-'%s' where milk_id='%s'",del_num.arr,milk_id.arr);
+    /* 실행시킬 SQL 문장*/
+
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt3 ;
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt4 ;
+	gotoxy(27,16);
+    printf("Insert Success\n");
+    EXEC SQL COMMIT WORK ;
+	EXEC SQL CLOSE c_cursor20;
+	EXEC SQL CLOSE c_cursor21;
+    }
+	else{
+	gotoxy(27,15);
+   	printf("ERROR : 납품할 수량보다 재고 수량이 작습니다.");
+	}
+    
+
+}
+
+
+void Cus_insert_tuple(){
+
+EXEC SQL BEGIN DECLARE SECTION;
+	 
+     varchar c_no[100];
+     varchar c_no2[100];
+     varchar c_no3[100];
+     varchar c_name[100];
+     varchar c_date[100];
+     varchar c_end[100];
+     varchar ceo[100];
+     varchar loc[100];
+
+    char dynstmt[1000];
+    char dynstmt2[1000];
+    char dynstmt3[1000];
+EXEC SQL END DECLARE SECTION;
+   
+
+   /* Register sql_error() as the error handler. */
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+   clrscr();
+   print_screen("insert_part_scn.txt");
+
+   /* 데이터 입력 */
+ while(1){
+	gotoxy(21,5);
+   printf("            ");
+	gotoxy(21,5);
+   gets(c_no.arr); 
+   c_no.len = strlen(c_no.arr);
+   c_no.arr[0] = (char)toupper(c_no.arr[0]);
+	chk5 = 0;
+	chk8 = 0;
+ 
+   sprintf(dynstmt2,"select cus_id from deliver where cus_id = '%s'", c_no.arr);
+   sprintf(dynstmt3,"select cus_id from customer where cus_id = '%s'", c_no.arr);
+	
+   EXEC SQL PREPARE S19 FROM :dynstmt2 ;
+   EXEC SQL PREPARE S29 FROM :dynstmt3 ;
+
+   	/* cursor 선언 */
+  	 EXEC SQL DECLARE c_cursor19 CURSOR FOR S19 ; 
+	EXEC SQL DECLARE c_cursor29 CURSOR FOR S29 ; 
+
+   	/* cursor open */
+   	EXEC SQL OPEN c_cursor19 ; 
+	EXEC SQL OPEN c_cursor29 ; 
+
+  	 EXEC SQL WHENEVER NOT FOUND DO break;
+
+	for(;;)
+        {
+        EXEC SQL FETCH c_cursor19 INTO :c_no2;
+
+	    c_no2.arr[c_no2.len] = '\0';
+		chk5 = 1;
+        }
+	for(;;)
+        {
+        EXEC SQL FETCH c_cursor29 INTO :c_no3;
+
+	    c_no3.arr[c_no3.len] = '\0';
+		chk8 = 1;
+        }
+	EXEC SQL WHENEVER NOT FOUND CONTINUE;
+   
+   if((chk5 == 0 && chk8 == 0 && c_no.arr[0] != '\0' && (c_no.arr[3] != '\0' &&c_no.arr[4] == '\0')) ){
+	gotoxy(27,15);
+	printf("                                          \n");
+        gotoxy(27,16);
+	printf("                                          \n");
+	break;
+   
+   }
+   else if(chk5 == 1 || chk8 == 1){
+	gotoxy(27,15);
+	printf("                                          \n");
+        gotoxy(27,16);
+	printf("                                          \n");
+	gotoxy(27,15);
+	printf("납품 또는 등록된 거래처번호이므로\n");
+        gotoxy(27,16);
+	printf("이 거래처번호를 등록할 수 없습니다.\n");
+	continue;
+	}
+   else{
+   gotoxy(27,15);
+   printf("                                          \n");
+   gotoxy(27,16);
+   printf("                                          \n");
+   gotoxy(27,15);
+   printf("ERROR : 거래처 번호를 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)영어 + 세자리 숫자");
+	}
+   }
+
+   while(1){
+   gotoxy(55,5);
+   printf("            ");
+   gotoxy(55,5);
+   gets(c_name.arr); 
+   c_name.len = strlen(c_name.arr);
+    if(c_name.arr[0] != '\0' ){
+	gotoxy(27,15);
+	printf("                                          \n");
+        gotoxy(27,16);
+	printf("                                          \n");
+	break;
+   }else{
+   gotoxy(27,15);
+   printf("ERROR : 지점 명을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)부산지점");
+   }
+   }
+
+   while(1){
+   gotoxy(21,7);
+   printf("            ");
+   gotoxy(21,7);
+   gets(c_date.arr); 
+   c_date.len = strlen(c_date.arr);
+   if((c_date.arr[4] == '-' && c_date.arr[7] == '-') && (c_date.arr[9] != '\0' && c_date.arr[10] == '\0') ){
+        gotoxy(27,15);
+	printf("                                          \n");
+        gotoxy(21,16);
+	printf("                                          \n");
+	break;
+   }else{
+   gotoxy(27,15);
+   printf("ERROR : 계약 날짜를 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)2016-11-11");
+   }
+   }
+   
+   while(1){
+   gotoxy(56,7);
+   printf("            ");
+   gotoxy(56,7);
+   gets(c_end.arr); 
+   c_end.len = strlen(c_end.arr);
+   if((c_end.arr[4] == '-' && c_end.arr[7] == '-') && (c_end.arr[9] != '\0' && c_end.arr[10] == '\0') ){
+	gotoxy(27,15);
+	printf("                                          \n");
+        gotoxy(27,16);
+	printf("                                          \n");
+	break;
+   }else{
+   gotoxy(27,15);
+   printf("ERROR : 계약 종료일을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)2016-11-18 ");
+   }
+   }
+   
+   while(1){
+   gotoxy(21,9);
+   printf("            ");
+   gotoxy(21,9);
+   gets(ceo.arr); 
+   ceo.len = strlen(ceo.arr);
+   if((ceo.arr[0] != '\0') ){
+        gotoxy(27,15);
+	printf("                                          \n");
+        gotoxy(27,16);
+	printf("                                          \n");
+	break;
+   }else{
+   gotoxy(27,15);
+   printf("ERROR : 점주의 이름을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)김성래");
+   }
+   }
+
+   while(1){
+   gotoxy(56,9);
+   printf("            ");
+   gotoxy(56,9);
+   gets(loc.arr); 
+   loc.len = strlen(loc.arr);
+   if(loc.arr[0] != '\0' ){
+	gotoxy(27,15);
+	printf("                                          \n");
+        gotoxy(27,16);
+	printf("                                          \n");
+	break;
+   }else{
+   gotoxy(27,15);
+   printf("ERROR : 지역명을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)부산");
+   }
+   }	
+
+    sprintf(dynstmt,"insert into customer values('%s','%s',to_date('%s','YY-MM-DD'),to_date('%s','YY-MM-DD'),'%s','%s')",c_no.arr, c_name.arr, c_date.arr, c_end.arr, ceo.arr, loc.arr);
+
+   /* 실행시킬 SQL 문장*/
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
+	gotoxy(27,16);
+    printf("거래처 등록에 성공하셨습니다.\n");
+
+    EXEC SQL COMMIT WORK ;
+
+
+}
+
+
+
+void Cus_update_tuple()
+{
+
+EXEC SQL BEGIN DECLARE SECTION;
+
+
+   char dynstmt2[1000];
+
+EXEC SQL END DECLARE SECTION;
+   char v_cno[20];
+   char v_cname[40];
+   char v_cdate[30];
+   char v_cend[30];
+   char v_ceo[50];
+   char v_loc[50];
+	
+  
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+   /* 사용자 입력 */
+    clrscr();
+    if(chk==1){
+    print_screen("update_part_scn.txt");
+
+   while(1){
+   gotoxy(21,5);
+   printf("            ");
+   gotoxy(21,5);
+   gets(v_cname); 
+
+   if((v_cname[0] != '\0' ) ){
+        gotoxy(27,15);
+	printf("                                      \n");
+        gotoxy(27,16);
+	printf("                                      \n");
+	break;
+   }else if(v_cname[0] == '\0'){
+   strcpy(v_cname,CusName);
+   break;
+   }
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 거래처 명을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)부산지점1");
+   }
+   }
+
+   while(1){
+   gotoxy(21,7);
+   printf("            ");
+   gotoxy(21,7);
+   gets(v_cdate); 
+   if((v_cdate[4] == '-' && v_cdate[7] == '-') && (v_cdate[9] != '\0' && v_cdate[10] == '\0') ){
+        gotoxy(27,15);
+	printf("                                      \n");
+        gotoxy(27,16);
+	printf("                                      \n");
+	break;
+   }else if(v_cdate[0] == '\0'){
+   strcpy(v_cdate,CusDate);
+   break;
+   }
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 계약일을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)2016-11-11");
+   }
+   }
+   
+   while(1){
+   gotoxy(56,7);
+   printf("            ");
+   gotoxy(56,7);
+   gets(v_cend); 
+   if((v_cend[4] == '-' && v_cend[7] == '-') && (v_cend[9] != '\0' && v_cend[10] == '\0') ){
+	gotoxy(27,15);
+	printf("                                      \n");
+        gotoxy(27,16);
+	printf("                                      \n");
+	break;
+   }else if(v_cend[0] == '\0'){
+   strcpy(v_cend,CusEndDate);
+   break;
+   }
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 계약 종료일을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)2016-11-18 ");
+   }
+   }
+   
+   while(1){
+   gotoxy(21,9);
+   printf("            ");
+   gotoxy(21,9);
+   gets(v_ceo); 
+   if(v_ceo[0] != '\0' ){
+	gotoxy(27,15);
+	printf("                                      \n");
+        gotoxy(27,16);
+	printf("                                      \n");
+	break;
+   }else if(v_ceo[0] == '\0'){
+   strcpy(v_ceo,Ceo);
+   break;
+   }
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 점주의 이름을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)mike");
+   }
+   }
+
+   while(1){
+   gotoxy(56,9);
+   printf("            ");
+   gotoxy(56,9);
+   gets(v_loc); 
+   v_loc[0] = (char)toupper(v_loc[0]);
+   if(v_loc[0] != '\0' ){
+	gotoxy(27,15);
+	printf("                                      \n");
+        gotoxy(27,16);
+	printf("                                      \n");
+	break;
+   }else if(v_loc[0] == '\0'){
+   strcpy(v_loc,Loc);
+   break;
+   }
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 지역명을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)Busan");
+   }
+   }
+
+   sprintf(dynstmt2,"update customer set cus_name= '%s',cus_date = to_date('%s','YY/MM/DD'),cus_end_date = to_date('%s','YY/MM/DD'),ceo_name = '%s',loc = '%s' where cus_id = '%s' ", v_cname,v_cdate,v_cend,v_ceo,v_loc,CusId);
+   
+   EXEC SQL EXECUTE IMMEDIATE :dynstmt2 ;
+	gotoxy(27,16);
+   printf("거래처 정보 수정에 성공하셨습니다.\n");
+   EXEC SQL COMMIT WORK ; 
+  }
+   else{
+      gotoxy(0,0);
+      clrscr();
+      print_screen("update_fail.txt"); 
+   }
+
+}
+
+
+void Milk_update_tuple()
+{
+
+EXEC SQL BEGIN DECLARE SECTION;
+
+   char dynstmt2[1000];
+
+
+EXEC SQL END DECLARE SECTION;
+   
+   char  type[10];
+   char  makedate[15];
+   char  selldate[15];
+   char  price[10];
+   char  amount[10];
+
+   
+  
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+   /* 사용자 입력 */
+    clrscr();
+
+    print_screen("update_milk_view.txt");
+
+   while(1){
+   gotoxy(27,6);
+   printf("                ");
+   gotoxy(27,6);
+   gets(makedate); 
+   //makedate.len = strlen(makedate.arr);
+   if((makedate[4] == '-' && makedate[7] == '-') && (makedate[9] != '\0' && makedate[10] == '\0') ){
+        gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }else if(makedate[0] == '\0'){
+   strcpy(makedate,Makedate);
+   break;
+   }
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 생산날짜를 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)2016-11-11");
+   }
+   }
+   
+   while(1){
+   gotoxy(55,6);
+   printf("                ");
+   gotoxy(55,6);
+   gets(selldate); 
+   //selldate.len = strlen(selldate.arr);
+   if((selldate[4] == '-' && selldate[7] == '-') && (selldate[9] != '\0' && selldate[10] == '\0') ){
+	gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }else if(selldate[0] == '\0'){
+   strcpy(selldate,Selldate);
+   break;
+   }
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 유통기한을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)2016-11-18 (생산날짜 + 7일)");
+   }
+   }
+   
+   while(1){
+   gotoxy(24,8);
+   printf("                ");
+   gotoxy(24,8);
+   gets(price); 
+   if((price[0] == '1') && price[3] != '\0' && (price[4] == '\0')){
+	gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }else if(price[0] == '\0'){
+   strcpy(price,Price);
+   break;
+   }
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 가격을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)WHITE = 1000, CHOCO,STRAW = 1200");
+   }
+   }
+
+   while(1){
+   gotoxy(52,8);
+   printf("                ");
+   gotoxy(52,8);
+   gets(amount); 
+   //amount.len = strlen(amount.arr);
+   if(amount[0] == '1' || amount[0] == '2' || amount[0] == '3' || amount[0] == '4' || amount[0] == '5' || amount[0] == '6' || amount[0] == '7' || amount[0] == '8' || amount[0] == '9'){
+	gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }else if(amount[0] == '\0'){
+   strcpy(amount,Amount);
+   break;
+   }
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 수량을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)20");
+   }
+   }
+
+   sprintf(dynstmt2,"update milk_storage set make_date = to_date('%s','YYYY-MM-DD'),sell_date = to_date('%s','YYYY-MM-DD'),price = %s,amount = %s where milk_id = '%s' ",makedate,selldate,price,amount,Milkid);
+   
+   EXEC SQL EXECUTE IMMEDIATE :dynstmt2 ;
+	gotoxy(27,16);
+   printf("Update Success\n");
+   EXEC SQL COMMIT WORK ; 
+
+}
+
+void Cus_update_Select_tuple(){
+
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar c_no[100];
+   varchar c_no2[100];
+   varchar c_name[100];
+   varchar c_date[100];
+   varchar c_end[100];
+   varchar ceo[100];
+   varchar loc[100];
+
+   char dynstmt2[1000];
+   char dynstmt3[1000];
+
+EXEC SQL END DECLARE SECTION;
+  
+   char no_temp2[10];
+    int x, y, count=0, i;
+    /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+   
+    /* 사용자 입력 */
+    clrscr();
+
+   print_screen("update_select_cus_view.txt"); 
+   gotoxy(33,5);
+   fgets(no_temp2,10,stdin);
+   no_temp2[strlen(no_temp2)-1]='\0';
+   no_temp2[0] = (char)toupper(no_temp2[0]);
+	
+   sprintf(dynstmt2,"SELECT cus_id, cus_name,to_char(cus_date,'YYYY-MM-DD'), to_char(cus_end_date,'YYYY-MM-DD'), ceo_name, loc FROM customer where cus_id ='%s'", 
+                    no_temp2); 
+   
+	
+   EXEC SQL PREPARE S13 FROM :dynstmt2 ;
+   
+
+   /* cursor 선언 */
+   EXEC SQL DECLARE c_cursor13 CURSOR FOR S13 ; 
+   
+
+   /* cursor open */
+   EXEC SQL OPEN c_cursor13 ; 
+   
+
+   EXEC SQL WHENEVER NOT FOUND do break;
+
+    x = 1;
+    y = 10;
+
+    for (;;)
+    {
+        EXEC SQL FETCH c_cursor13 INTO :c_no, :c_name, :c_date, :c_end, :ceo, :loc;
+
+        c_no.arr[c_no.len] = '\0' ;
+	c_name.arr[c_name.len] = '\0';
+	c_date.arr[c_date.len] = '\0';
+        c_end.arr[c_end.len] = '\0' ;
+	ceo.arr[ceo.len] = '\0';
+	loc.arr[loc.len] = '\0';
+
+            gotoxy(x,y);
+	printf(" |   %-4s   |  %-5s  |  %-8s  |  %-8s  | %-5s | %-4s |",
+ 		c_no.arr, c_name.arr, c_date.arr, c_end.arr,ceo.arr,loc.arr);
+	y++;
+	count++; //pagecount
+	if( count == PAGE_NUM){
+	   printf("\n                                    hit any key\n");
+	   count = 0;
+	   getch();
+
+	  gotoxy(0,10);
+	  for(int i=0;i<PAGE_NUM;i++){
+		 printf("                                                                               \n");
+	  }
+	   y = 10 ;
+
+	}
+
+    }
+    printf("\n                                     (END)                                     \n");
+  
+
+   strcpy(CusId,c_no.arr);
+   strcpy(CusName,c_name.arr);
+   strcpy(CusDate,c_date.arr);
+   strcpy(CusEndDate,c_end.arr);
+   strcpy(Ceo,ceo.arr);
+   strcpy(Loc,loc.arr);
+
+    if(count==0){
+   	chk=0;	
+    }else{
+	chk=1;
+    }
+   
+
+  EXEC SQL CLOSE c_cursor13;
+
+}
+
+
+void Cus_get_tuple()
+{
+/* --------------------------------------------------------------------------
+   Retrieve the current maximum employee number
+-------------------------------------------------------------------------- */
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar c_no[100];
+   varchar c_name[100];
+   varchar c_date[100];
+   varchar c_end[100];
+   varchar ceo[100];
+   varchar loc[100];
+
+   char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+   char v_cno[20];
+   char v_cname[40];
+   char v_cdate[30];
+   char v_cend[30];
+   char v_ceo[50];
+   char v_loc[50];
+	
+   int x, y, count=0 ;
+
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+   /* 사용자 입력 */
+   clrscr();
+
+   print_screen("select_part_scn.txt");
+
+   gotoxy(21,5);
+   gets(v_cno); 
+   
+   gotoxy(55,5);
+   gets(v_cname);
+
+   gotoxy(21,7);
+   gets(v_cdate);
+   
+   gotoxy(56,7);
+   gets(v_cend);
+   
+   gotoxy(21,9);
+   gets(v_ceo);
+      
+   gotoxy(56,9);
+   gets(v_loc);
+   
+   /* 실행시킬 SQL 문장*/      //%s%  :s를 포함하는 모든 것 
+   sprintf(dynstmt,"SELECT cus_id, cus_name, to_char(cus_date,'YYYY-MM-DD'), to_char(cus_end_date,'YYYY-MM-DD'), ceo_name, loc FROM customer where cus_id LIKE '%%%s%%' and cus_name LIKE '%%%s%%' and cus_date LIKE '%%%s%%' and cus_end_date LIKE '%%%s%%' and ceo_name LIKE '%%%s%%' and loc LIKE '%%%s%%'", 
+                    v_cno, v_cname, v_cdate, v_cend, v_ceo, v_loc); 
+
+   /* select 문장이 제대로 구성되어 있는지 화면에 찍어봄 */
+   //printf("dynstmt:%s\n", dynstmt);
+
+   EXEC SQL PREPARE S12 FROM :dynstmt ;
+
+   /* cursor 선언 */
+   EXEC SQL DECLARE c_cursor12 CURSOR FOR S12 ; 
+
+   /* cursor open */
+   EXEC SQL OPEN c_cursor12 ; 
+
+   EXEC SQL WHENEVER NOT FOUND do break;
+ 
+
+   x= 2;
+   y = 14 ;
+
+   for (;;)
+    {
+        EXEC SQL FETCH c_cursor12 INTO :c_no, :c_name, :c_date, :c_end, :ceo, :loc;
+
+	c_no.arr[c_no.len] = '\0' ;
+	c_name.arr[c_name.len] = '\0';
+	c_date.arr[c_date.len] = '\0';
+        c_end.arr[c_end.len] = '\0' ;
+	ceo.arr[ceo.len] = '\0';
+	loc.arr[loc.len] = '\0';
+
+	gotoxy(x,y);
+	printf(" |   %-4s   | %-6s | %-10s | %-10s | %-7s | %-6s |  ", c_no.arr, c_name.arr,c_date.arr,c_end.arr,ceo.arr,loc.arr);
+	y++;
+	count++; //pagecount
+	if( count == PAGE_NUM){
+	   printf("\n                                  hit any key\n");
+	   count = 0;
+	   getch();
+
+	  gotoxy(0,14);
+	  for(int i=0;i<PAGE_NUM;i++){
+		 printf("                                                                               \n");
+	  }
+	   y = 14 ;
+
+	}
+
+    }
+    printf("\n                                     (END)                                  \n");
+   
+    /* Close the cursor. */
+   EXEC SQL CLOSE c_cursor12;
+
+   EXEC SQL COMMIT ;
+  
+
+}
+
+
+
+void Del_select_tuple()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    varchar      d_id[10]; //납품번호
+    varchar      m_id[10]; //우유번호
+    varchar      c_id[10]; //고객번호
+    varchar  selldate[20]; //납품일자
+    varchar      d_num[3]; //납품개수
+
+    char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+    
+    char no_temp1[10];
+
+    int x, y, count=0, i;
+
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+   
+    /* 사용자 입력 */
+    clrscr();
+
+    print_screen("select_update_del_view.txt");
+
+    gotoxy(27,5);
+    fgets(no_temp1, 10, stdin); 
+    no_temp1[strlen(no_temp1)-1] = '\0' ;  
+   // no_temp1[0] = (char)toupper(no_temp1[0]);
+   
+   
+    sprintf(dynstmt,"SELECT deliver_id,milk_id,cus_id,to_char(deliver_date,'YYYY-MM-DD'),deliver_amount  FROM deliver where deliver_id = '%s'", no_temp1) ;
+   
+    EXEC SQL PREPARE S2 FROM :dynstmt ;
+
+    EXEC SQL DECLARE d2_cursor CURSOR FOR S2 ; 
+
+    EXEC SQL OPEN d2_cursor ; 
+
+  
+    EXEC SQL WHENEVER NOT FOUND do break;
+
+    x = 1;
+    y = 10;
+
+    for(;;)
+    {
+        EXEC SQL FETCH d2_cursor INTO :d_id, :m_id, :c_id, :selldate, :d_num;
+
+	    d_id.arr[d_id.len] = '\0';
+	    m_id.arr[m_id.len] = '\0';
+	    c_id.arr[c_id.len] = '\0';
+	    selldate.arr[selldate.len] = '\0';
+	    d_num.arr[d_num.len]='\0';
+	    
+	    gotoxy(x,y);
+	printf(" |  %-8s  |  %-8s  |  %-8s  |  %-8s  |  %-8s  |",
+ d_id.arr, m_id.arr, c_id.arr, selldate.arr,d_num.arr);
+	y++;
+	count++;
+	if( count == PAGE_NUM){
+	   printf("\n                             hit any key\n");
+	   count = 0;
+	   getch();
+
+           gotoxy(0,10);
+           for(i= 0; i < PAGE_NUM; i++){
+		printf("                                                                             \n");
+	   }
+	  
+	   y = 10 ;
+	}
+	 chk = 1;
+    }
+    printf("\n                                      (END)\n");
+	
+	gotoxy(0,0);
+    	
+        strcpy(del_id, d_id.arr);
+	strcpy(milk_id, m_id.arr);
+	strcpy(cus_id, c_id.arr);
+	strcpy(del_date, selldate.arr);
+	strcpy(del_num, d_num.arr);
+
+    EXEC SQL CLOSE d2_cursor; 
+   
+}
+
+void Milk_select_tuple()
+{
+
+
+EXEC SQL BEGIN DECLARE SECTION;
+    varchar  id[10];
+    varchar  id2[10];
+    varchar type[10];
+    varchar makedate[15];
+    varchar selldate[15];
+    varchar price[10];
+    varchar amount[10];
+
+    char dynstmt[1000];
+    char dynstmt2[1000];
+EXEC SQL END DECLARE SECTION;
+    
+    char no_temp1[10];
+
+    int x, y, count=0, i;
+
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+   
+    /* 사용자 입력 */
+    clrscr();
+
+    print_screen("select_update_milk_view.txt");
+
+    gotoxy(27,5);
+    fgets(no_temp1, 10, stdin); 
+    no_temp1[strlen(no_temp1)-1] = '\0' ;  
+    no_temp1[0] = (char)toupper(no_temp1[0]);
+   
+    sprintf(dynstmt,"SELECT milk_id,milk_type,to_char(make_date,'YYYY-MM-DD'),to_char(sell_date,'YYYY-MM-DD'),price,amount  FROM milk_storage where milk_id = '%s%'", no_temp1) ;
+
+    EXEC SQL PREPARE S2 FROM :dynstmt ;
+
+    EXEC SQL DECLARE c2_cursor CURSOR FOR S2 ;  
+
+    EXEC SQL OPEN c2_cursor ; 
+ 
+
+  
+    EXEC SQL WHENEVER NOT FOUND do break;
+
+    x = 1;
+    y = 10;
+
+    for(;;)
+    {
+        EXEC SQL FETCH c2_cursor INTO :id, :type, :makedate, :selldate, :price, :amount ;
+
+	    id.arr[id.len] = '\0';
+	    type.arr[type.len] = '\0';
+	    makedate.arr[makedate.len] = '\0';
+	    selldate.arr[selldate.len] = '\0';
+	    price.arr[price.len] = '\0';
+	    amount.arr[amount.len] = '\0';
+
+	    gotoxy(x,y);
+	printf(" |  %-4s  |  %-5s  |  %-8s  |  %-8s  | %-5s | %-4s |",
+ id.arr, type.arr, makedate.arr, selldate.arr,price.arr,amount.arr);
+	y++;
+	count++;
+	if( count == PAGE_NUM){
+	   printf("\n                             hit any key\n");
+	   count = 0;
+	   getch();
+
+           gotoxy(0,10);
+           for(i= 0; i < PAGE_NUM; i++){
+		printf("                                                                             \n");
+	   }
+	  
+	   y = 10 ;
+	}
+	 chk = 1;
+    }
+    printf("                                      (END)\n");
+	
+	gotoxy(0,0);
+    	
+        strcpy(Milkid, id.arr);
+	strcpy(Milktype, type.arr);
+	strcpy(Makedate, makedate.arr);
+	strcpy(Selldate, selldate.arr);
+	strcpy(Price, price.arr);
+	strcpy(Amount, amount.arr);
+
+    EXEC SQL CLOSE c2_cursor; 
+   
+
+}
+
+void Month_sales_get_tuple()
+{
+/* --------------------------------------------------------------------------
+   Retrieve the current maximum employee number
+-------------------------------------------------------------------------- */
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar month1[100];
+   varchar month2[100];
+   varchar month3[100];
+   varchar month4[100];
+   varchar month5[100];
+   varchar month6[100];
+   varchar month7[100];
+   varchar month8[100];
+   varchar month9[100];
+   varchar month10[100];
+   varchar month11[100];
+   varchar month12[100];
+   varchar yearsales[100];
+   varchar yearsales2[100];
+   varchar curyear[10];
+   varchar year[10];
+
+   char dynstmt[1000];
+   char dynstmt2[1000];
+   char dynstmt3[1000];
+   char dynstmt4[1000];
+   char dynstmt5[1000];
+EXEC SQL END DECLARE SECTION;
+
+   char no_temp1[20];
+   
+
+   int x, y,x2,y2 ;
+
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+   /* 사용자 입력 */
+   clrscr();
+
+   print_screen("month_sales_view.txt");
+
+   while(1){
+   gotoxy(36,5);
+   printf("                ");
+   gotoxy(36,5);
+   fgets(no_temp1,20,stdin); 
+   no_temp1[strlen(no_temp1)-1] = '\0';
+	chk9 = 0;
+	gotoxy(53,4);
+	printf("                                        ");
+	gotoxy(53,5);
+	printf("                                        ");
+   
+   if(no_temp1[0] == '2' && no_temp1[1] == '0' && no_temp1[3] != '\0' && no_temp1[4] == '\0'){
+	break;
+   	}
+   else if(no_temp1[0] == '\0'){
+	break;
+	}else{
+	gotoxy(53,4);
+   	printf("ERROR : 년도를 올바르게 입력하세요.");
+  	 gotoxy(53,5);
+  	 printf("ex)2016");
+		continue;
+		}
+	
+   }
+   
+   /* 실행시킬 SQL 문장*/
+   sprintf(dynstmt,"select sum(decode(to_char(deliver_date,'MM'),'01',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'02',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'03',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'04',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'05',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'06',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'07',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'08',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'09',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'10',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'11',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'12',price*deliver_amount,0)) from customer join (milk_storage join deliver using(milk_id)) using(cus_id) where to_char(deliver_date,'YYYY') = '%s'",no_temp1); 
+   sprintf(dynstmt2,"select sum(decode(to_char(deliver_date,'MM'),'01',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'02',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'03',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'04',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'05',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'06',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'07',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'08',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'09',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'10',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'11',price*deliver_amount,0)),sum(decode(to_char(deliver_date,'MM'),'12',price*deliver_amount,0))from customer join (milk_storage join deliver using(milk_id)) using(cus_id) where to_char(deliver_date,'YYYY') = to_char(sysdate,'YYYY')"); 
+   sprintf(dynstmt3,"select sum(price*deliver_amount) from customer join (milk_storage join deliver using(milk_id)) using(cus_id)where to_char(deliver_date,'YYYY') = '%s'",no_temp1);
+   sprintf(dynstmt4,"select to_char(sysdate,'YYYY'),sum(price*deliver_amount) from customer join (milk_storage join deliver using(milk_id)) using(cus_id)where to_char(deliver_date,'YYYY') = to_char(sysdate,'YYYY')");
+   sprintf(dynstmt5,"select to_char(deliver_date,'YYYY') from deliver where to_char(deliver_date,'YYYY') = '%s'",no_temp1);
+   
+   EXEC SQL PREPARE S8 FROM :dynstmt ;
+   EXEC SQL PREPARE S9 FROM :dynstmt2 ;
+   EXEC SQL PREPARE S10 FROM :dynstmt3 ;
+   EXEC SQL PREPARE S11 FROM :dynstmt4 ;
+   EXEC SQL PREPARE S35 FROM :dynstmt5 ;
+
+   /* cursor 선언 */
+   EXEC SQL DECLARE c_cursor8 CURSOR FOR S8 ; 
+   EXEC SQL DECLARE c_cursor9 CURSOR FOR S9 ; 
+   EXEC SQL DECLARE c_cursor10 CURSOR FOR S10 ; 
+   EXEC SQL DECLARE c_cursor11 CURSOR FOR S11 ; 
+   EXEC SQL DECLARE c_cursor35 CURSOR FOR S35 ;
+
+   /* cursor open */
+   EXEC SQL OPEN c_cursor8 ; 
+   EXEC SQL OPEN c_cursor9 ; 
+   EXEC SQL OPEN c_cursor10 ; 
+   EXEC SQL OPEN c_cursor11 ;
+   EXEC SQL OPEN c_cursor35 ;
+
+   EXEC SQL WHENEVER NOT FOUND DO break;
+	for (;;)
+    {
+        EXEC SQL FETCH c_cursor35 INTO :year;
+
+	year.arr[year.len] = '\0' ;
+		chk9 = 1;
+	}
+
+if(chk9 == 1 && no_temp1[0] == '2' && no_temp1[3] != '\0' && no_temp1[4] == '\0'){
+   for (;;)
+    {
+        EXEC SQL FETCH c_cursor8 INTO :month1,:month2,:month3,:month4,:month5,:month6,:month7,:month8,:month9,:month10,:month11, :month12;
+
+	month1.arr[month1.len] = '\0' ;
+	month2.arr[month2.len] = '\0' ;
+	month3.arr[month3.len] = '\0' ;
+	month4.arr[month4.len] = '\0' ;
+	month5.arr[month5.len] = '\0' ;
+	month6.arr[month6.len] = '\0' ;
+	month7.arr[month7.len] = '\0' ;
+	month8.arr[month8.len] = '\0' ;
+	month9.arr[month9.len] = '\0' ;
+	month10.arr[month10.len] = '\0' ;
+	month11.arr[month11.len] = '\0' ;
+	month12.arr[month12.len] = '\0' ;
+	
+	
+	gotoxy(1,9);
+	printf(" |  %-7s원  |  %-7s원  |  %-7s원  |  %-7s원  |  %-7s원  |  %-7s원  |",
+ month1.arr, month2.arr, month3.arr, month4.arr, month5.arr, month6.arr);
+	gotoxy(1,14);
+	printf(" |  %-7s원  |  %-7s원  |  %-7s원  |  %-7s원  |  %-7s원  |  %-7s원  |",
+	month7.arr, month8.arr, month9.arr, month10.arr, month11.arr, month12.arr);
+	
+	printf("                                      (END)\n");
+	}
+	for (;;)
+    {
+        EXEC SQL FETCH c_cursor10 INTO :yearsales;
+
+	yearsales.arr[yearsales.len] = '\0' ;
+	gotoxy(44,16);
+	printf("%s년 총매출 : %s원",no_temp1,yearsales.arr);
+	gotoxy(0,0);
+	}
+	}else if(chk9 == 0 && no_temp1[0] != '\0'){
+		gotoxy(51,4);
+   		printf("납품하지 않은 년도입니다.");
+  		 gotoxy(51,5);
+  		 printf("매출을 조회할 수 없습니다.");
+	}
+if(no_temp1[0] == '\0'){
+   for (;;)
+    {
+        EXEC SQL FETCH c_cursor9 INTO :month1,:month2,:month3,:month4,:month5,:month6,:month7,:month8,:month9,:month10,:month11, :month12;
+
+	month1.arr[month1.len] = '\0' ;
+	month2.arr[month2.len] = '\0' ;
+	month3.arr[month3.len] = '\0' ;
+	month4.arr[month4.len] = '\0' ;
+	month5.arr[month5.len] = '\0' ;
+	month6.arr[month6.len] = '\0' ;
+	month7.arr[month7.len] = '\0' ;
+	month8.arr[month8.len] = '\0' ;
+	month9.arr[month9.len] = '\0' ;
+	month10.arr[month10.len] = '\0' ;
+	month11.arr[month11.len] = '\0' ;
+	month12.arr[month12.len] = '\0' ;
+
+	
+	gotoxy(1,9);
+	printf(" |  %-7s원  |  %-7s원  |  %-7s원  |  %-7s원  |  %-7s원  |  %-7s원  |",
+ month1.arr, month2.arr, month3.arr, month4.arr, month5.arr, month6.arr);
+	gotoxy(1,14);
+	printf(" |  %-7s원  |  %-7s원  |  %-7s원  |  %-7s원  |  %-7s원  |  %-7s원  |",
+	month7.arr, month8.arr, month9.arr, month10.arr, month11.arr, month12.arr);
+	
+	printf("                                      (END)\n");
+	}
+	for (;;)
+        {
+        EXEC SQL FETCH c_cursor11 INTO :curyear, :yearsales2;
+
+	curyear.arr[curyear.len] = '\0' ;
+	yearsales2.arr[yearsales2.len] = '\0' ;
+
+	gotoxy(44,16);
+	printf("%s년 총매출 : %s원",curyear.arr,yearsales2.arr);
+	}
+   gotoxy(0,0);
+
+	}
+    /* Close the cursor. */
+   EXEC SQL CLOSE c_cursor8;
+   EXEC SQL CLOSE c_cursor9;
+   EXEC SQL CLOSE c_cursor10;
+   EXEC SQL CLOSE c_cursor11;
+
+   EXEC SQL COMMIT ;
+	
+}
+
+
+
+void Day_sales_get_tuple()
+{
+/* --------------------------------------------------------------------------
+   Retrieve the current maximum employee number
+-------------------------------------------------------------------------- */
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar cusname[100];
+   varchar type[100];
+   varchar deliverdate[100];
+   varchar total[100];
+   varchar daytotal[20];
+   varchar cusname2[100];
+   varchar type2[100];
+   varchar deliverdate2[100];
+   varchar total2[100];
+   varchar daytotal2[20];
+   
+   char dynstmt[1000];
+   char dynstmt2[1000];
+   char dynstmt3[1000];
+   char dynstmt4[1000];
+EXEC SQL END DECLARE SECTION;
+
+   char no_temp1[20];
+   
+
+   int x, y, count=0, i ;
+
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+   /* 사용자 입력 */
+   clrscr();
+
+   print_screen("day_sales_view.txt");
+
+   while(1){
+   gotoxy(27,5);
+   printf("                ");
+   gotoxy(27,5);
+   fgets(no_temp1,20,stdin); 
+   no_temp1[strlen(no_temp1)-1] = '\0';
+   gotoxy(51,4);
+	printf("                                        ");
+	gotoxy(51,5);
+	printf("                                        ");
+   
+   if((no_temp1[4] == '-' && no_temp1[7] == '-') && (no_temp1[9] != '\0' && no_temp1[10] == '\0')){
+	break;
+   	}
+   else if(no_temp1[0] == '\0'){
+	break;
+	}else{
+		gotoxy(51,4);
+   	printf("ERROR : 날짜를 올바르게 입력하세요.");
+  	 gotoxy(51,5);
+  	 printf("ex)2016-11-11");
+		continue;
+		}
+	
+   }
+   
+   /* 실행시킬 SQL 문장*/
+   sprintf(dynstmt,"select cus_name, milk_type,to_char(deliver_date,'YYYY-MM-DD'), to_char(price*deliver_amount,'999,999')||'원' from customer join (milk_storage join deliver using(milk_id)) using(cus_id) where deliver_date = to_date('%s','YYYY-MM-DD')",no_temp1); 
+   sprintf(dynstmt2,"select sum(price*deliver_amount) from customer join (milk_storage join deliver using(milk_id)) using(cus_id) where deliver_date = to_date('%s','YYYY-MM-DD') group by deliver_date",no_temp1); 
+   sprintf(dynstmt3,"select cus_name, milk_type,to_char(deliver_date,'YYYY-MM-DD'), to_char(price*deliver_amount,'999,999')||'원' from customer join (milk_storage join deliver using(milk_id)) using(cus_id) where to_date(deliver_date,'YYYY-MM-DD') = to_date(sysdate,'YYYY-MM-DD')"); 
+   sprintf(dynstmt4,"select sum(price*deliver_amount) from customer join (milk_storage join deliver using(milk_id)) using(cus_id) where to_date(deliver_date,'YYYY-MM-DD') = to_date(sysdate,'YYYY-MM-DD') group by deliver_date"); 
+   
+   EXEC SQL PREPARE S4 FROM :dynstmt ;
+   EXEC SQL PREPARE S5 FROM :dynstmt2 ;
+   EXEC SQL PREPARE S6 FROM :dynstmt3 ;
+   EXEC SQL PREPARE S7 FROM :dynstmt4 ;
+
+   /* cursor 선언 */
+   EXEC SQL DECLARE c_cursor4 CURSOR FOR S4 ; 
+   EXEC SQL DECLARE c_cursor5 CURSOR FOR S5 ; 
+   EXEC SQL DECLARE c_cursor6 CURSOR FOR S6 ; 
+   EXEC SQL DECLARE c_cursor7 CURSOR FOR S7 ; 
+
+   /* cursor open */
+   EXEC SQL OPEN c_cursor4 ; 
+   EXEC SQL OPEN c_cursor5 ; 
+   EXEC SQL OPEN c_cursor6 ; 
+   EXEC SQL OPEN c_cursor7 ; 
+
+   EXEC SQL WHENEVER NOT FOUND DO break;
+
+    x = 1;
+   y = 9;
+
+   if((no_temp1[4] == '-' && no_temp1[7] == '-') && (no_temp1[9] != '\0' && no_temp1[10] == '\0')){
+   for (;;)
+    {
+        EXEC SQL FETCH c_cursor4 INTO :cusname, :type, :deliverdate, :total;
+
+	cusname.arr[cusname.len] = '\0' ;
+	type.arr[type.len] = '\0';
+	deliverdate.arr[deliverdate.len] = '\0';
+	total.arr[total.len] = '\0';
+	
+	
+	
+	gotoxy(x,y);
+	printf(" |  %-6s  |  %-5s  |  %-10s  |  %-7s  |",
+ cusname.arr, type.arr, deliverdate.arr, total.arr);
+	y++;
+	count++;
+	if( count == PAGE_NUM){
+	   printf("\n                             hit any key\n");
+	   count = 0;
+	   getch();
+
+           gotoxy(0,9);
+           for(i= 0; i < PAGE_NUM; i++){
+		printf("                                                                             \n");
+	   }
+
+	   y = 9 ;
+	}
+
+    }
+	printf("\n                                      (END)\n");
+	for (;;)
+    	{
+        EXEC SQL FETCH c_cursor5 INTO :daytotal;
+
+	daytotal.arr[daytotal.len] = '\0' ;
+	
+	
+	gotoxy(30,15);
+	printf("일 매출 : %s원",daytotal.arr);
+
+   	 }
+}
+    if(no_temp1[0] == '\0'){
+	x = 1;
+	y = 9;
+	for (;;)
+    {
+        EXEC SQL FETCH c_cursor6 INTO :cusname2, :type2, :deliverdate2, :total2;
+
+	cusname2.arr[cusname2.len] = '\0' ;
+	type2.arr[type2.len] = '\0';
+	deliverdate2.arr[deliverdate2.len] = '\0';
+	total2.arr[total2.len] = '\0';
+	
+	
+	
+	gotoxy(x,y);
+	printf(" |  %-6s  |  %-5s  |  %-10s  |  %-7s  |",
+ cusname2.arr, type2.arr, deliverdate2.arr, total2.arr);
+	y++;
+	count++;
+	if( count == PAGE_NUM){
+	   printf("\n                             hit any key\n");
+	   count = 0;
+	   getch();
+
+           gotoxy(0,9);
+           for(i= 0; i < PAGE_NUM; i++){
+		printf("                                                                             \n");
+	   }
+
+	   y = 9 ;
+	}
+
+    }
+	printf("                                      (END)\n");
+for (;;)
+    {
+        EXEC SQL FETCH c_cursor7 INTO :daytotal2;
+
+	daytotal2.arr[daytotal2.len] = '\0' ;
+	
+	
+	gotoxy(30,15);
+	printf("일 매출 : %s원",daytotal2.arr);
+
+    } 
+	}
+	gotoxy(0,0);
+
+    /* Close the cursor. */
+   EXEC SQL CLOSE c_cursor4;
+   EXEC SQL CLOSE c_cursor5;
+
+   EXEC SQL CLOSE c_cursor6;
+   EXEC SQL CLOSE c_cursor7;
+
+   EXEC SQL COMMIT ;
+}
+
+void Del_get_tuple()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    varchar d_id[10];
+    varchar m_id[10];
+    varchar c_id[10];
+    varchar selldate[20];
+    varchar d_num[10];
+
+   char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+   char no_temp1[10];
+   char no_temp2[10];
+   char no_temp3[10];
+   char no_temp4[15];
+ 
+   int x, y, count=0, i ;
+
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+   /* 사용자 입력 */
+   clrscr();
+
+   print_screen("select_del_view.txt");
+	
+   gotoxy(27,5);
+   fgets(no_temp1,10,stdin); 
+   no_temp1[strlen(no_temp1)-1] = '\0';
+   no_temp1[0] = (char)toupper(no_temp1[0]);
+   
+   gotoxy(55,5);  
+   fgets(no_temp2,10,stdin); 
+   no_temp2[strlen(no_temp2)-1] = '\0';
+   for(int j = 0; j<strlen(no_temp2); j++)
+	no_temp2[j] = (char)toupper(no_temp2[j]);
+    
+
+   gotoxy(27,7);
+   fgets(no_temp3,10,stdin); 
+   no_temp3[strlen(no_temp3)-1] = '\0';
+
+   gotoxy(55,7);
+   fgets(no_temp4,10,stdin); 
+   no_temp4[strlen(no_temp4)-1] = '\0';
+
+    /* 실행시킬 SQL 문장*/
+   sprintf(dynstmt,"select deliver_id,milk_id,cus_id, to_char(deliver_date,'YYYY')||'년'||to_char(deliver_date,'MM')||'월'||to_char(deliver_date,'DD')||'일',deliver_amount from deliver where deliver_id like '%%%s%%' and milk_id like '%%%s%%' and cus_id like '%%%s%%' and deliver_date like '%%%s%%'",no_temp1, no_temp2, no_temp3, no_temp4); 
+
+
+   EXEC SQL PREPARE S22 FROM :dynstmt ;
+
+   /* cursor 선언 */
+   EXEC SQL DECLARE c_cursor22 CURSOR FOR S22 ; 
+
+   /* cursor open */
+   EXEC SQL OPEN c_cursor22 ; 
+
+   EXEC SQL WHENEVER NOT FOUND DO break;
+
+    x = 1;
+   y = 11;
+	for (;;)
+    {
+        EXEC SQL FETCH c_cursor22 INTO :d_id, :m_id, :c_id, :selldate, :d_num;
+
+	d_id.arr[d_id.len] = '\0' ;
+	m_id.arr[m_id.len] = '\0';
+	c_id.arr[c_id.len] = '\0';
+	selldate.arr[selldate.len] = '\0';
+	d_num.arr[d_num.len] = '\0';
+	
+	
+	gotoxy(x,y);
+	printf(" |  %-3s  |   %-4s   |   %-4s   |  %-10s  |  %-4s  |",
+ d_id.arr, m_id.arr, c_id.arr, selldate.arr,d_num.arr);
+	y++;
+	count++;
+	if( count == PAGE_NUM){
+	   printf("\n                             hit any key\n");
+	   count = 0;
+	   getch();
+
+           gotoxy(0,11);
+           for(i= 0; i < PAGE_NUM; i++){
+		printf("                                                                             \n");
+	   }
+
+	   y = 11 ;
+	}
+
+    }
+    printf("\n                                      (END)\n");
+	gotoxy(0,0);
+
+    /* Close the cursor. */
+   EXEC SQL CLOSE c_cursor22;
+
+   EXEC SQL COMMIT ;
+
+}
+
+void Milk_get_tuple()
+{
+/* --------------------------------------------------------------------------
+   Retrieve the current maximum employee number
+-------------------------------------------------------------------------- */
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar id[100];
+   varchar type[100];
+   varchar makedate[100];
+   varchar selldate[100];
+   varchar price[100];
+   varchar amount[100];
+
+   char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+   char no_temp1[10];
+   char no_temp2[10];
+   char no_temp3[15];
+   char no_temp4[15];
+
+   int x, y, count=0, i ;
+
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+   /* 사용자 입력 */
+   clrscr();
+
+   print_screen("select_milk_view.txt");
+
+
+   gotoxy(27,5);
+   fgets(no_temp1,10,stdin); 
+   no_temp1[strlen(no_temp1)-1] = '\0';
+   no_temp1[0] = (char)toupper(no_temp1[0]);
+   
+   gotoxy(55,5);
+   fgets(no_temp2,10,stdin); 
+   no_temp2[strlen(no_temp2)-1] = '\0';
+   for(int j = 0; j<strlen(no_temp2); j++)
+	no_temp2[j] = (char)toupper(no_temp2[j]);
+    
+
+   gotoxy(27,7);
+   fgets(no_temp3,10,stdin); 
+   no_temp3[strlen(no_temp3)-1] = '\0';
+
+   gotoxy(55,7);
+   fgets(no_temp4,10,stdin); 
+   no_temp4[strlen(no_temp4)-1] = '\0';
+      
+   
+   /* 실행시킬 SQL 문장*/
+   sprintf(dynstmt,"select milk_id, milk_type,to_char(make_date,'YYYY')||'년'||to_char(make_date,'MM')||'월'||to_char(make_date,'DD')||'일',to_char(sell_date,'YYYY')||'년'||to_char(sell_date,'MM')||'월'||to_char(sell_date,'DD')||'일',to_char(price,'9,999'), amount from milk_storage where milk_id like '%%%s%%' and milk_type like '%%%s%%' and make_date like '%%%s%%' and sell_date like '%%%s%%'",no_temp1, no_temp2, no_temp3, no_temp4); 
+
+
+   EXEC SQL PREPARE S FROM :dynstmt ;
+
+   /* cursor 선언 */
+   EXEC SQL DECLARE c_cursor CURSOR FOR S ; 
+
+   /* cursor open */
+   EXEC SQL OPEN c_cursor ; 
+
+   EXEC SQL WHENEVER NOT FOUND DO break;
+
+    x = 1;
+   y = 11;
+
+   for (;;)
+    {
+        EXEC SQL FETCH c_cursor INTO :id, :type, :makedate, :selldate, :price, :amount;
+
+	id.arr[id.len] = '\0' ;
+	type.arr[type.len] = '\0';
+	makedate.arr[makedate.len] = '\0';
+	selldate.arr[selldate.len] = '\0';
+	price.arr[price.len] = '\0';
+	amount.arr[amount.len] = '\0';
+	
+	
+	gotoxy(x,y);
+	printf(" |  %-4s  |  %-5s  |  %-8s  |  %-8s  | %-6s | %-4s |",
+ id.arr, type.arr, makedate.arr, selldate.arr,price.arr,amount.arr);
+	y++;
+	count++;
+	if( count == PAGE_NUM){
+	   printf("\n                             hit any key\n");
+	   count = 0;
+	   getch();
+
+           gotoxy(0,11);
+           for(i= 0; i < PAGE_NUM; i++){
+		printf("                                                                             \n");
+	   }
+
+	   y = 11 ;
+	}
+
+    }
+    printf("                                      (END)\n");
+	gotoxy(0,0);
+
+    /* Close the cursor. */
+   EXEC SQL CLOSE c_cursor;
+
+   EXEC SQL COMMIT ;
+}
+
+
+void Cus_delete_tuple()
+{
+
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar c_no[10];
+   varchar c_no2[10];
+   varchar c_name[15];
+   varchar c_date[20];
+   varchar c_end[20];
+   varchar ceo[10];
+   varchar loc[10];
+
+    char dynstmt[1000];
+    char dynstmt2[1000];
+    char dynstmt3[1000];
+EXEC SQL END DECLARE SECTION;
+    
+    char no_temp1[10];
+    char yes_no[5];
+
+    int x, y, count=0, i;
+
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+   
+    /* 사용자 입력 */
+    clrscr();
+    print_screen("delete_cus_view.txt");
+
+    gotoxy(32,5);
+    fgets(no_temp1, 10, stdin); 
+    no_temp1[strlen(no_temp1)-1] = '\0' ;  
+    no_temp1[0] = (char)toupper(no_temp1[0]);
+   
+   
+    sprintf(dynstmt,"SELECT cus_id,cus_name,to_char(cus_date,'YY-MM-DD'),to_char(cus_end_date,'YY-MM-DD'),ceo_name,loc FROM customer where cus_id = '%s%'", no_temp1) ;
+    sprintf(dynstmt3,"SELECT cus_id FROM deliver where cus_id = '%s%'", no_temp1) ;
+   
+    EXEC SQL PREPARE S14 FROM :dynstmt ;
+    EXEC SQL PREPARE S15 FROM :dynstmt3 ;
+
+    EXEC SQL DECLARE c_cursor14 CURSOR FOR S14 ; 
+    EXEC SQL DECLARE c_cursor15 CURSOR FOR S15 ; 
+
+    EXEC SQL OPEN c_cursor14 ; 
+    EXEC SQL OPEN c_cursor15 ; 
+
+  
+    EXEC SQL WHENEVER NOT FOUND do break;
+
+	for(;;)
+        {
+        EXEC SQL FETCH c_cursor15 INTO :c_no2;
+
+	    c_no2.arr[c_no2.len] = '\0';
+	    chk3 = 1;
+        }
+
+    x = 1;
+    y = 10;
+
+    for(;;)
+    {
+        EXEC SQL FETCH c_cursor14 INTO :c_no, :c_name, :c_date, :c_end, :ceo, :loc ;
+
+	    c_no.arr[c_no.len] = '\0';
+	    c_name.arr[c_name.len] = '\0';
+	    c_date.arr[c_date.len] = '\0';
+	    c_end.arr[c_end.len] = '\0';
+	    ceo.arr[ceo.len] = '\0';
+	    loc.arr[loc.len] = '\0';
+
+	   gotoxy(x,y);
+	printf(" |  %-4s  |  %-5s  |  %-8s  |  %-8s  | %-5s | %-4s |",
+ c_no.arr, c_name.arr, c_date.arr, c_end.arr,ceo.arr,loc.arr);
+	y++;
+	count++;
+	if( count == PAGE_NUM){
+	   printf("\n                             hit any key\n");
+	   count = 0;
+	   getch();
+
+           gotoxy(0,10);
+           for(i= 0; i < PAGE_NUM; i++){
+		printf("                                                                             \n");
+	   }
+	  
+	   y = 10 ;
+	}
+	 chk2 = 1;
+    }
+    printf("\n                                      (END)\n");
+	
+	if(chk3 == 0){
+	while(1){
+	if(chk2 == 1){
+	gotoxy(27,16);
+	printf("삭제 하시겠습니까?(Y/N) ");
+	fgets(yes_no, 5, stdin); 
+        yes_no[strlen(yes_no)-1] = '\0' ;  
+        yes_no[0] = (char)toupper(yes_no[0]);
+	
+		
+		if(yes_no[0] == 'Y' && yes_no[1] == '\0'){
+		sprintf(dynstmt2,"delete from customer where cus_id = '%s'",no_temp1);
+   
+  		 EXEC SQL EXECUTE IMMEDIATE :dynstmt2 ;
+			gotoxy(27,17);
+   			printf("거래처 정보 삭제에 성공하였습니다.\n");
+   		EXEC SQL COMMIT WORK ; 
+		break;
+		}
+		else if(yes_no[0] == 'N' && yes_no[1] == '\0'){
+		gotoxy(27,17);
+	  	 printf("                                      \n");
+			break;
+		}else{
+			gotoxy(27,16);
+			printf("                                      \n");
+			gotoxy(27,17);
+			printf("값을 잘못 입력하셨습니다.");
+			continue;
+			}
+	}
+	if(chk2 == 0)
+		break;
+		}
+	}else if(strcmp(c_no2.arr,c_no.arr) == 0){
+	gotoxy(27,17);
+	printf("제품을 납품한 업체는 삭제할 수 없습니다.");
+	chk3 = 0;
+	}
+	
+
+    EXEC SQL CLOSE c_cursor14; 
+    EXEC SQL CLOSE c_cursor15; 
+   
+
+}
+
+void Del_delete_tuple()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    varchar d_id[10];
+    varchar m_id[10];
+    varchar c_id[10];
+    varchar selldate[20];
+    varchar d_num[10];
+    varchar milk_num[10];
+
+    char dynstmt[1000];
+    char dynstmt2[1000];
+    char dynstmt3[1000];
+    char dynstmt4[1000];
+EXEC SQL END DECLARE SECTION;
+    
+    char no_temp1[10];
+    char yes_no[5];
+
+    int x, y, count=0, i;
+
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+   
+    /* 사용자 입력 */
+    clrscr();
+
+    print_screen("delete_del_view.txt");
+
+     gotoxy(29,5);
+    fgets(no_temp1, 10, stdin); 
+    no_temp1[strlen(no_temp1)-1] = '\0' ;  
+    no_temp1[0] = (char)toupper(no_temp1[0]);
+   
+   
+    sprintf(dynstmt,"SELECT deliver_id,milk_id,cus_id,to_char(deliver_date,'yyyy-mm-dd'),deliver_amount  FROM deliver where deliver_id = '%s'", no_temp1) ;
+    sprintf(dynstmt3,"select amount from milk_storage where milk_id = '%s'", m_id.arr);   
+
+    EXEC SQL PREPARE S30 FROM :dynstmt ;
+    EXEC SQL PREPARE S26 FROM :dynstmt3 ;
+
+    EXEC SQL DECLARE c_cursor30 CURSOR FOR S30 ; 
+    EXEC SQL DECLARE c_cursor26 CURSOR FOR S26 ; 
+
+    EXEC SQL OPEN c_cursor30 ; 
+    EXEC SQL OPEN c_cursor26 ; 
+  
+    EXEC SQL WHENEVER NOT FOUND do break;
+
+    for(;;)
+        	{
+        	EXEC SQL FETCH c_cursor26 INTO :milk_num;
+
+	    	milk_num.arr[milk_num.len] = '\0';
+			
+       		 }
+	
+    x = 1;
+    y = 10;
+
+    for(;;)
+    {
+        EXEC SQL FETCH c_cursor30 INTO :d_id, :m_id, :c_id, :selldate, :d_num;
+
+	d_id.arr[d_id.len] = '\0' ;
+	m_id.arr[m_id.len] = '\0';
+	c_id.arr[c_id.len] = '\0';
+	selldate.arr[selldate.len] = '\0';
+	d_num.arr[d_num.len] = '\0';
+
+	    gotoxy(x,y);
+	printf(" |  %-4s |  %-4s  |   %-4s   |  %-10s  |  %-4s  |",
+ d_id.arr, m_id.arr, c_id.arr, selldate.arr,d_num.arr);
+	y++;
+	count++;
+	if( count == PAGE_NUM){
+	   printf("\n                             hit any key\n");
+	   count = 0;
+	   getch();
+
+           gotoxy(0,10);
+           for(i= 0; i < PAGE_NUM; i++){
+		printf("                                                                             \n");
+	   }
+	  
+	   y = 10 ;
+	}
+	 chk2 = 1;
+    }
+    printf("\n                                      (END)\n");
+
+
+	while(1){
+	if(chk2 == 1){
+	gotoxy(27,16);
+	printf("삭제 하시겠습니까?(Y/N) ");
+	fgets(yes_no, 5, stdin); 
+        yes_no[strlen(yes_no)-1] = '\0' ;  
+        yes_no[0] = (char)toupper(yes_no[0]);
+		
+		if(yes_no[0] == 'Y' && yes_no[1] == '\0'){
+		sprintf(dynstmt4,"update milk_storage set amount = amount +'%s' where milk_id='%s'",d_num.arr, m_id.arr);   
+		EXEC SQL EXECUTE IMMEDIATE :dynstmt4 ;
+		
+		sprintf(dynstmt2,"delete from deliver where deliver_id = '%s'",no_temp1);
+   
+  		 EXEC SQL EXECUTE IMMEDIATE :dynstmt2 ;
+			gotoxy(27,17);
+			printf("                                      \n");
+			gotoxy(27,17);
+   			printf("Delete Success\n");
+   		EXEC SQL COMMIT WORK ; 
+		break;
+		}
+		else if(yes_no[0] == 'N' && yes_no[0] == '\0'){
+		gotoxy(27,17);
+	  	 printf("                                      \n");
+			break;
+		}else{
+			gotoxy(27,16);
+			printf("                                      \n");
+			gotoxy(27,17);
+			printf("값을 잘못 입력하셨습니다.");
+			continue;
+			}
+	}
+	if(chk2 == 0)
+		break;
+	}
+	
+	//gotoxy(0,0);
+    	
+
+    EXEC SQL CLOSE c_cursor30; 
+    EXEC SQL CLOSE c_cursor26; 
+}
+
+
+void Milk_delete_tuple()
+{
+
+
+EXEC SQL BEGIN DECLARE SECTION;
+    varchar  id[10];
+    varchar  id2[10];
+    varchar type[10];
+    varchar makedate[15];
+    varchar selldate[15];
+    varchar price[10];
+    varchar amount[10];
+
+    char dynstmt[1000];
+    char dynstmt2[1000];
+    char dynstmt3[1000];
+EXEC SQL END DECLARE SECTION;
+    
+    char no_temp1[10];
+    char yes_no2[5];
+
+    int x, y, count=0, i;
+
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+   
+    /* 사용자 입력 */
+    clrscr();
+
+    print_screen("delete_milk_view.txt");
+
+    gotoxy(29,5);
+    fgets(no_temp1, 10, stdin); 
+    no_temp1[strlen(no_temp1)-1] = '\0' ;  
+    no_temp1[0] = (char)toupper(no_temp1[0]);
+   
+   
+    sprintf(dynstmt,"SELECT milk_id,milk_type,to_char(make_date,'YYYY-MM-DD'),to_char(sell_date,'YYYY-MM-DD'),price,amount  FROM milk_storage where milk_id = '%s%'", no_temp1) ;
+    sprintf(dynstmt3,"SELECT milk_id FROM deliver where milk_id = '%s%'", no_temp1) ;
+   
+    EXEC SQL PREPARE S3 FROM :dynstmt ;
+    EXEC SQL PREPARE S4 FROM :dynstmt3 ;
+
+    EXEC SQL DECLARE c3_cursor CURSOR FOR S3 ; 
+    EXEC SQL DECLARE c3_cursor2 CURSOR FOR S4 ; 
+
+    EXEC SQL OPEN c3_cursor ; 
+    EXEC SQL OPEN c3_cursor2 ; 
+  
+    EXEC SQL WHENEVER NOT FOUND do break;
+
+	for(;;)
+        {
+        EXEC SQL FETCH c3_cursor2 INTO :id2;
+
+	    id2.arr[id2.len] = '\0';
+		chk3 = 1;
+        }
+	
+    x = 1;
+    y = 10;
+
+    for(;;)
+    {
+        EXEC SQL FETCH c3_cursor INTO :id, :type, :makedate, :selldate, :price, :amount ;
+
+	    id.arr[id.len] = '\0';
+	    type.arr[type.len] = '\0';
+	    makedate.arr[makedate.len] = '\0';
+	    selldate.arr[selldate.len] = '\0';
+	    price.arr[price.len] = '\0';
+	    amount.arr[amount.len] = '\0';
+
+	    gotoxy(x,y);
+	printf(" |  %-4s  |  %-5s  |  %-8s  |  %-8s  | %-5s | %-4s |",
+ id.arr, type.arr, makedate.arr, selldate.arr,price.arr,amount.arr);
+	y++;
+	count++;
+	if( count == PAGE_NUM){
+	   printf("\n                             hit any key\n");
+	   count = 0;
+	   getch();
+
+           gotoxy(0,10);
+           for(i= 0; i < PAGE_NUM; i++){
+		printf("                                                                             \n");
+	   }
+	  
+	   y = 10 ;
+	}
+	 chk2 = 1;
+    }
+    printf("                                      (END)\n");
+
+	if(chk3 == 0){
+	while(1){
+	if(chk2 == 1){
+	gotoxy(27,16);
+	printf("삭제 하시겠습니까?(Y/N) ");
+	fgets(yes_no2, 5, stdin); 
+        yes_no2[strlen(yes_no2)-1] = '\0' ;  
+        yes_no2[0] = (char)toupper(yes_no2[0]);
+		
+		if(yes_no2[0] == 'Y' && yes_no2[1] == '\0'){
+		sprintf(dynstmt2,"delete from milk_storage where milk_id = '%s'",no_temp1);
+   
+  		 EXEC SQL EXECUTE IMMEDIATE :dynstmt2 ;
+			gotoxy(27,17);
+			printf("                                      \n");
+			gotoxy(27,17);
+   			printf("Delete Success\n");
+   		EXEC SQL COMMIT WORK ; 
+		break;
+		}
+		else if(yes_no2[0] == 'N' && yes_no2[1] == '\0'){
+		gotoxy(27,17);
+	  	 printf("                                      \n");
+			break;
+		}else{
+			gotoxy(27,16);
+			printf("                                      \n");
+			gotoxy(27,17);
+			printf("값을 잘못 입력하셨습니다.");
+			continue;
+			}
+	}
+	if(chk2 == 0)
+		break;
+	}
+}else if(strcmp(id2.arr,id.arr) == 0){
+	gotoxy(27,17);
+	printf("납품된 제품은 삭제할 수 없습니다.");
+	chk3 = 0;
+}
+	
+	//gotoxy(0,0);
+    	
+       
+	
+
+    EXEC SQL CLOSE c3_cursor; 
+    EXEC SQL CLOSE c3_cursor2; 
+   
+
+}
+
+void Milk_insert_tuple()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    varchar id[7];
+    varchar id2[7];
+    varchar id3[7];
+    varchar type[10];
+    varchar makedate[15];
+    varchar selldate[15];
+    varchar price[6];
+    varchar amount[5];
+
+    char dynstmt3[1000];
+    char dynstmt4[1000];
+    char dynstmt5[1000];
+EXEC SQL END DECLARE SECTION;
+    
+   
+
+   /* Register sql_error() as the error handler. */
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+   clrscr();
+   print_screen("insert_milk_view.txt");
+
+   /* 데이터 입력 */
+ while(1){
+	gotoxy(27,5);
+   printf("                ");
+	gotoxy(27,5);
+   gets(id.arr); 
+   id.len = strlen(id.arr);
+   id.arr[0] = (char)toupper(id.arr[0]);
+	chk5 = 0;
+	chk8 = 0;
+ 
+   sprintf(dynstmt4,"select milk_id from deliver where milk_id = '%s'", id.arr);
+   sprintf(dynstmt5,"select milk_id from milk_storage where milk_id = '%s'", id.arr);
+	
+   EXEC SQL PREPARE S18 FROM :dynstmt4 ;
+   EXEC SQL PREPARE S28 FROM :dynstmt5 ;
+
+   	/* cursor 선언 */
+  	 EXEC SQL DECLARE c_cursor18 CURSOR FOR S18 ; 
+	 EXEC SQL DECLARE c_cursor28 CURSOR FOR S28 ; 
+
+   	/* cursor open */
+   	EXEC SQL OPEN c_cursor18 ; 
+	EXEC SQL OPEN c_cursor28 ; 
+
+  	 EXEC SQL WHENEVER NOT FOUND DO break;
+
+	for(;;)
+        {
+        EXEC SQL FETCH c_cursor18 INTO :id2;
+
+	    id2.arr[id2.len] = '\0';
+		chk5 = 1;
+        }
+	for(;;)
+        {
+        EXEC SQL FETCH c_cursor28 INTO :id3;
+
+	    id3.arr[id3.len] = '\0';
+		chk8 = 1;
+        }
+	EXEC SQL WHENEVER NOT FOUND CONTINUE;
+   
+   if((chk5 == 0 && chk8 == 0 && id.arr[0] != '\0' && (id.arr[4] != '\0' && id.arr[5] == '\0')) ){
+	gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   
+   }
+   else if(chk5 == 1 || chk8 == 1){
+	gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	gotoxy(27,15);
+	printf("납품 또는 재고에 있는 제품번호이므로\n");
+        gotoxy(27,16);
+	printf("이 제품번호를 등록할 수 없습니다.\n");
+	}
+   else{
+   gotoxy(27,15);
+   printf("                                        \n");
+   gotoxy(27,16);
+   printf("                                        \n");
+   gotoxy(27,15);
+   printf("ERROR : 제품번호를 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)W1111, C1111, S1111");
+	}
+   }
+   EXEC SQL CLOSE c_cursor18;
+   EXEC SQL CLOSE c_cursor28;
+   
+   while(1){
+   gotoxy(55,5);
+   printf("                ");
+   gotoxy(55,5);
+   gets(type.arr); 
+   type.len = strlen(type.arr);
+   for(int j = 0; j<strlen(type.arr); j++)
+	type.arr[j] = (char)toupper(type.arr[j]);
+   if((type.arr[4] != '\0' &&type.arr[5] == '\0') && (id.arr[0] == type.arr[0]) ){
+        gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }else{
+   gotoxy(27,15);
+   printf("ERROR : 제품종류를 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)WHITE, CHOCO, STRAW");
+   }
+   }
+
+   while(1){
+   gotoxy(27,7);
+   printf("                ");
+   gotoxy(27,7);
+   gets(makedate.arr); 
+   makedate.len = strlen(makedate.arr);
+   if((makedate.arr[4] == '-' && makedate.arr[7] == '-') && (makedate.arr[9] != '\0' && makedate.arr[10] == '\0') ){
+        gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }else{
+   gotoxy(27,15);
+   printf("ERROR : 생산날짜를 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)2016-11-11");
+   }
+   }
+   
+   while(1){
+   gotoxy(55,7);
+   printf("                ");
+   gotoxy(55,7);
+   gets(selldate.arr); 
+   selldate.len = strlen(selldate.arr);
+   if((selldate.arr[4] == '-' && selldate.arr[7] == '-') && (selldate.arr[9] != '\0' && selldate.arr[10] == '\0') ){
+	gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }else{
+   gotoxy(27,15);
+   printf("ERROR : 유통기한을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)2016-11-18 (생산날짜 + 7일)");
+   }
+   }
+   
+   while(1){
+   gotoxy(24,9);
+   printf("                ");
+   gotoxy(24,9);
+   gets(price.arr); 
+   price.len = strlen(price.arr);
+   if((price.arr[0] == '1') && price.arr[3] != '\0' && (price.arr[4] == '\0') ){
+	gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }else{
+   gotoxy(27,15);
+   printf("ERROR : 가격을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)WHITE = 1000, CHOCO,STRAW = 1200");
+   }
+   }
+
+   while(1){
+   gotoxy(52,9);
+   printf("                ");
+   gotoxy(52,9);
+   gets(amount.arr); 
+   amount.len = strlen(amount.arr);
+   if(amount.arr[0] == '1' || amount.arr[0] == '2' || amount.arr[0] == '3' || amount.arr[0] == '4' || amount.arr[0] == '5' || amount.arr[0] == '6' || amount.arr[0] == '7' || amount.arr[0] == '8' || amount.arr[0] == '9'){
+	gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }else{
+   gotoxy(27,15);
+   printf("ERROR : 수량을 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)20");
+   }
+   }
+    sprintf(dynstmt3,"insert into milk_storage values ('%s','%s',to_date('%s','YYYY-MM-DD'),to_date('%s','YYYY-MM-DD'),%s,%s)" ,id.arr,type.arr,makedate.arr,selldate.arr,price.arr,amount.arr);
+
+   /* 실행시킬 SQL 문장*/
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt3 ;
+	gotoxy(27,16);
+    printf("Insert Success\n");
+    EXEC SQL COMMIT WORK ;
+    
+    
+}
+
+
+
+void print_screen(char fname[])
+{
+	FILE *fp;
+	char line[100];
+
+	if ( (fp = fopen(fname,"r"))  == NULL ){
+		printf("file open error\n");
+		getch();
+		exit(-1);
+	}
+	while(1)
+	{
+		if( fgets(line, 99, fp) == NULL){
+		     break;
+		}
+		printf("%s", line);
+	}
+
+	fclose(fp);
+}
+
+void Del_update_tuple() //납품 항목 수정
+{
+
+  EXEC SQL BEGIN DECLARE SECTION;
+
+   varchar milk_num[10];
+  
+   char dynstmt[1000];
+   char dynstmt2[1000];
+   char dynstmt3[1000];
+   char dynstmt4[1000];
+   char dynstmt5[1000];
+   char chk_del[1000];
+
+EXEC SQL END DECLARE SECTION;
+
+   
+    char  selldate[20]; //납품일자
+    char     d_num[10]; //납품개수
+
+ 
+ EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+   /* 사용자 입력 */
+    clrscr();
+
+    print_screen("update_del_view.txt");
+
+   while(1){
+   gotoxy(27,7);
+   printf("                ");
+   gotoxy(27,7);
+   gets(selldate); 
+   //selldate.len = strlen(selldate.arr);
+   if((selldate[4] == '-' &&selldate[7] == '-') && (selldate[9] != '\0' && selldate[10] == '\0')){
+	gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }else if(selldate[0] == '\0'){
+   strcpy(selldate,del_date);
+   break;
+   }
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 납품날짜를 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)2016-11-18");
+   }
+   }
+
+   while(1){
+   gotoxy(55,7);
+   printf("                ");
+   gotoxy(55,7);
+   gets(d_num); 
+   //d_num.len = strlen(d_num.arr);
+   if(d_num[0]=='1' || d_num[0]=='2' || d_num[0]=='3' || d_num[0]=='4' || d_num[0]=='5' || d_num[0]=='6' || d_num[0]=='7' || d_num[0]=='8' || d_num[0]=='9'){
+        gotoxy(27,15);
+	printf("                                        \n");
+        gotoxy(27,16);
+	printf("                                        \n");
+	break;
+   }else if(d_num[0]=='\0'){
+   strcpy(d_num,del_num);
+   break;
+   }
+   else{
+   gotoxy(27,15);
+   printf("ERROR : 납품개수를 올바르게 입력하세요.");
+   gotoxy(27,16);
+   printf("ex)20");
+   }
+   }
+
+	sprintf(dynstmt5,"select amount from milk_storage where milk_id = '%s'", milk_id);
+	
+   EXEC SQL PREPARE S23 FROM :dynstmt5 ;
+
+   	/* cursor 선언 */
+  	 EXEC SQL DECLARE c_cursor23 CURSOR FOR S23 ; 
+
+   	/* cursor open */
+   	EXEC SQL OPEN c_cursor23 ; 
+
+  	 EXEC SQL WHENEVER NOT FOUND DO break;
+
+	for(;;)
+        {
+        EXEC SQL FETCH c_cursor23 INTO :milk_num;
+
+	    milk_num.arr[milk_num.len] = '\0';
+        }
+	EXEC SQL WHENEVER NOT FOUND CONTINUE;
+
+
+	if(atoi(del_num)>atoi(d_num)){
+ sprintf(dynstmt,"update milk_storage set amount = amount + ('%s'-'%s') where milk_id='%s'",del_num,d_num, milk_id);   
+ sprintf(dynstmt2,"update deliver set deliver_date = to_date('%s','yyyy-mm-dd'),deliver_amount='%s' where deliver_id=%s",selldate,d_num,del_id);
+ EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
+ EXEC SQL EXECUTE IMMEDIATE :dynstmt2 ;
+gotoxy(27,16);
+   printf("Update Success\n");
+   EXEC SQL COMMIT WORK ;
+	
+	}
+	else if(atoi(del_num)<atoi(d_num) && atoi(milk_num.arr)>=(atoi(d_num)-atoi(del_num))){
+ sprintf(dynstmt3,"update milk_storage set amount = amount - ('%s'-'%s') where milk_id='%s'",d_num,del_num, milk_id);   
+ sprintf(dynstmt4,"update deliver set deliver_date = to_date('%s','yyyy-mm-dd'),deliver_amount=%s where deliver_id=%s",selldate,d_num,del_id);
+ EXEC SQL EXECUTE IMMEDIATE :dynstmt3 ;
+ EXEC SQL EXECUTE IMMEDIATE :dynstmt4 ;
+gotoxy(27,16);
+   printf("Update Success\n");
+   EXEC SQL COMMIT WORK ;
+	}
+	else if(atoi(milk_num.arr)<(atoi(d_num)-atoi(del_num))){
+	gotoxy(27,15);
+  	 printf("ERROR : 재고 수량이 부족합니다.");
+	}
+	EXEC SQL CLOSE c_cursor23; 
+ 
+}
+
+/* --------------------------------------------------------------------------
+int sql_error()
+
+   errrpt prints the ORACLE error msg and number.
+-------------------------------------------------------------------------- */
+void sql_error(char *msg)
+{
+    char err_msg[128];
+    size_t buf_len, msg_len;
+
+    EXEC SQL WHENEVER SQLERROR CONTINUE;
+
+    printf("\n%s\n", msg);
+    buf_len = sizeof (err_msg);
+    sqlglm(err_msg, &buf_len, &msg_len);
+    printf("%.*s\n", msg_len, err_msg);
+
+    getch();
+    EXEC SQL ROLLBACK RELEASE;
+    //exit(EXIT_FAILURE);
+}
+/*---------------  화면 커서 제어 함수 --------------------*/
+#define STD_HANDLE GetStdHandle(STD_OUTPUT_HANDLE)
+
+void gotoxy(int x, int y)
+{
+    COORD Cur= {(SHORT)x, (SHORT) y};
+
+    SetConsoleCursorPosition(STD_HANDLE, Cur);
+}
+
+void getxy(int *x, int *y)
+{
+    CONSOLE_SCREEN_BUFFER_INFO Buf ;
+
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Buf);
+    *x = (int)Buf.dwCursorPosition.X ;
+    *y = (int)Buf.dwCursorPosition.Y ;
+ 
+}
+
+void clrscr(void)
+{
+    COORD Cur= {0, 0};
+    unsigned long dwLen;
+
+    FillConsoleOutputCharacter(STD_HANDLE, ' ', 80*25, Cur, &dwLen);
+}
+
+/*---------------------------------------------------------*/

@@ -1,0 +1,30 @@
+﻿빌드 시작: 2016-12-07 오후 5:45:57
+     1>2 노드의 "C:\Users\user\Desktop\MilkFactory\MilkFactory.vcxproj" 프로젝트(Build 대상)입니다.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt milk_factory.c
+         milk_factory.c
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(840): warning C4018: '<' : signed 또는 unsigned가 일치하지 않습니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(793): warning C4101: 'del_id' :참조되지 않은 지역 변수입니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(1835): warning C4101: 'v_cno' :참조되지 않은 지역 변수입니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(2049): warning C4101: 'type' :참조되지 않은 지역 변수입니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(2255): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(2249): warning C4101: 'dynstmt3' :참조되지 않은 지역 변수입니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(2230): warning C4101: 'c_no2' :참조되지 않은 지역 변수입니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(3083): warning C4101: 'dynstmt2' :참조되지 않은 지역 변수입니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(3064): warning C4101: 'id2' :참조되지 않은 지역 변수입니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(3390): warning C4101: 'y2' :참조되지 않은 지역 변수입니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(3390): warning C4101: 'x2' :참조되지 않은 지역 변수입니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(3390): warning C4101: 'y' :참조되지 않은 지역 변수입니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(3390): warning C4101: 'x' :참조되지 않은 지역 변수입니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(5134): warning C4018: '<' : signed 또는 unsigned가 일치하지 않습니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(5427): warning C4018: '<' : signed 또는 unsigned가 일치하지 않습니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(7524): warning C4018: '<' : signed 또는 unsigned가 일치하지 않습니다.
+     1>c:\users\user\desktop\milkfactory\milk_factory.c(7722): warning C4101: 'chk_del' :참조되지 않은 지역 변수입니다.
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\user\Desktop\MilkFactory\Debug\MilkFactory.exe" /INCREMENTAL /NOLOGO orasql12.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\user\Desktop\MilkFactory\Debug\MilkFactory.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\user\Desktop\MilkFactory\Debug\MilkFactory.lib" /MACHINE:X86 Debug\milk_factory.obj
+         MilkFactory.vcxproj -> C:\Users\user\Desktop\MilkFactory\Debug\MilkFactory.exe
+     1>"C:\Users\user\Desktop\MilkFactory\MilkFactory.vcxproj" 프로젝트를 빌드했습니다(Build 대상).
+
+빌드했습니다.
+
+경과 시간: 00:00:01.12
